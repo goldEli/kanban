@@ -42,9 +42,12 @@ const Kanban = () => {
       onDragEnd={(result) => {
         if (!result.destination) return;
         const { source, destination } = result;
+        // 跨容器拖动
         if (source.droppableId !== destination.droppableId) {
-          const sourceColumn = columns[source.droppableId];
-          const destColumn = columns[destination.droppableId];
+          const sourceColumn =
+            columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
+          const destColumn =
+            columns[destination.droppableId as API.Kanban.GetKanbanList.Keys];
           const sourceItems = [...sourceColumn.items];
           const destItems = [...destColumn.items];
           const [removed] = sourceItems.splice(source.index, 1);
@@ -61,7 +64,8 @@ const Kanban = () => {
             },
           });
         } else {
-          const column = columns[source.droppableId];
+          const column =
+            columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
           const copiedItems = [...column.items];
           const [removed] = copiedItems.splice(source.index, 1);
           copiedItems.splice(destination.index, 0, removed);

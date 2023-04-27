@@ -48,15 +48,15 @@ export const data: Model.Kanban.Info[] = [
 ];
 
 export const columnsFromBackend: API.Kanban.GetKanbanList.Result = {
-  [uuidv4()]: {
+  todo: {
     title: "To-do",
     items: data,
   },
-  [uuidv4()]: {
+  inProgress: {
     title: "In Progress",
     items: [],
   },
-  [uuidv4()]: {
+  done: {
     title: "Done",
     items: [],
   },
