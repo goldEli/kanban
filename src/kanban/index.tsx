@@ -53,19 +53,57 @@ const Kanban = () => {
         console.log(source, destination);
         // 跨容器拖动
         if (source.droppableId !== destination.droppableId) {
-          
-          // const sourceColumn =
+          // 获取拖动源数据
+          const sourceData = columns.find(
+            (item) => handleId(item.id) === source.droppableId
+          );
+          // 获取目标数据
+          const destinationData = columns.find(
+            (item) => handleId(item.id) === destination.droppableId
+          );
+          // 获取源中可拖动卡片列表
+          const sourceItems = [...(sourceData?.list ?? [])];
+          // 获取目标中可拖动卡片列表
+          const destinationItems = [...(destinationData?.list ?? [])];
+          // 源移除的卡片数据
+          const [removed] = sourceItems.splice(source.index, 1);
+          // 移除的卡片数据插入目标中
+          destinationItems.splice(destination.index, 0, removed);
+
+          // 更新数据
+          setColumns((prev) => {
+            return prev.map((item) => {
+              if (handleId(item.id) === source.droppableId && sourceData) {
+                return {
+                  ...sourceData,
+                  list: sourceItems,
+                };
+              }
+              if (
+                handleId(item.id) === destination.droppableId &&
+                destinationData
+              ) {
+                return {
+                  ...destinationData,
+                  list: destinationItems,
+                };
+              }
+              return item;
+            });
+          });
+
+          // const sourceData =
           //   columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
           // const destColumn =
           //   columns[destination.droppableId as API.Kanban.GetKanbanList.Keys];
-          // const sourceItems = [...sourceColumn.items];
+          // const sourceItems = [...sourceData.items];
           // const destItems = [...destColumn.items];
           // const [removed] = sourceItems.splice(source.index, 1);
           // destItems.splice(destination.index, 0, removed);
           // setColumns({
           //   ...columns,
           //   [source.droppableId]: {
-          //     ...sourceColumn,
+          //     ...sourceData,
           //     items: sourceItems,
           //   },
           //   [destination.droppableId]: {
@@ -73,7 +111,7 @@ const Kanban = () => {
           //     items: destItems,
           //   },
           // });
-        } 
+        }
         // else {
         //   const column =
         //     columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
