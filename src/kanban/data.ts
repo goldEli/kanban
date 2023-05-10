@@ -35,3 +35,24 @@ export const issueColumns: Model.Kanban.IssueColumn[] =
       title: item.title,
     };
   });
+
+// [
+//   {
+//     groupId: 1,
+//     title: "美术组",
+//     data: [
+//       { id: 1, title: "沟通中", count: 9, list: data },
+//       { id: 2, title: "规划中", count: 9, list: [] },
+//       { id: 3, title: "实现中", count: 9, list: [] },
+//     ],
+//   },
+//   {
+//     groupId: 2,
+//     title: "程序组",
+//     data: [
+//       { id: 1, title: "沟通中", count: 9, list: data },
+//       { id: 2, title: "规划中", count: 9, list: [] },
+//       { id: 3, title: "实现中", count: 9, list: [] },
+//     ],
+//   },
+// ];
