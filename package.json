@@ -17,6 +17,7 @@
     "@types/uuid": "^9.0.1",
     "bootstrap": "^5.2.3",
     "generate-avatar": "^1.4.10",
+    "immer": "^10.0.2",
     "lorem-ipsum": "^2.0.8",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
