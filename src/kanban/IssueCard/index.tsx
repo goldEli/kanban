@@ -1,6 +1,7 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
+import { handleId } from "../utils";
 
 const TaskInformation = styled.div`
   display: flex;
@@ -25,15 +26,19 @@ const TaskInformation = styled.div`
   }
 `;
 
-interface TaskCardProps {
-  item: Model.Kanban.Info;
+interface IssueCardProps {
+  item: Model.Kanban.Issue;
   index: number;
 }
 
-const TaskCard = (props: TaskCardProps) => {
+const IssueCard = (props: IssueCardProps) => {
   const { item, index } = props;
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable
+      key={item.id}
+      draggableId={handleId(item.id)}
+      index={index}
+    >
       {(provided) => (
         <div
           ref={provided.innerRef}
@@ -41,16 +46,16 @@ const TaskCard = (props: TaskCardProps) => {
           {...provided.dragHandleProps}
         >
           <TaskInformation>
-            <p>{item.Task}</p>
+            <p>{item.name}</p>
             <div className="secondary-details">
-              <p>
+              {/* <p>
                 <span>
                   {new Date(item.Due_Date).toLocaleDateString("en-us", {
                     month: "short",
                     day: "2-digit",
                   })}
                 </span>
-              </p>
+              </p> */}
             </div>
           </TaskInformation>
         </div>
@@ -59,4 +64,4 @@ const TaskCard = (props: TaskCardProps) => {
   );
 };
 
-export default TaskCard;
+export default IssueCard;

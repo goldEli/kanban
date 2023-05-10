@@ -1,63 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
-export const data: Model.Kanban.Info[] = [
+export const data: Model.Kanban.Issue[] = [
   {
-    id: "1",
-    Task: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent.",
-    // Assigned_To: 'Beltran',
-    // Assignee: 'Romona',
-    // Status: 'To-do',
-    // Priority: 'Low',
-    Due_Date: "25-May-2020",
+    id: 1111,
+    name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent.",
+    // content_txt: "to-do",
+    father_id: 1,
   },
   {
-    id: "2",
-    Task: "Fix Styling",
-    // Assigned_To: 'Dave',
-    // Assignee: 'Romona',
-    // Status: 'To-do',
-    // Priority: 'Low',
-    Due_Date: "26-May-2020",
+    id: 2222,
+    name: "Fix Styling",
+    // content_txt: "to-do",
+    father_id: 1,
   },
   {
-    id: "3",
-    Task: "Handle Door Specs",
-    // Assigned_To: 'Roman',
-    // Assignee: 'Romona',
-    // Status: 'To-do',
-    // Priority: 'Low',
-    Due_Date: "27-May-2020",
-  },
-  {
-    id: "4",
-    Task: "morbi",
-    // Assigned_To: 'Gawen',
-    // Assignee: 'Kai',
-    // Status: 'Done',
-    // Priority: 'High',
-    Due_Date: "23-Aug-2020",
-  },
-  {
-    id: "5",
-    Task: "proin",
-    // Assigned_To: 'Bondon',
-    // Assignee: 'Antoinette',
-    // Status: 'In Progress',
-    // Priority: 'Medium',
-    Due_Date: "05-Jan-2021",
+    id: 3333,
+    name: "Handle Door Specs",
+    // content_txt: "to-do",
+    father_id: 1,
   },
 ];
 
 export const columnsFromBackend: API.Kanban.GetKanbanList.Result = {
-  todo: {
-    title: "To-do",
-    items: data,
-  },
-  inProgress: {
-    title: "In Progress",
-    items: [],
-  },
-  done: {
-    title: "Done",
-    items: [],
-  },
+  data: [
+    { id: 1, title: "To-do", count: 9, list: data },
+    { id: 2, title: "In Progress", count: 9, list: [] },
+    { id: 3, title: "Done", count: 9, list: [] },
+  ],
 };
+
+export const issueColumns: Model.Kanban.IssueColumn[] =
+  columnsFromBackend.data.map((item) => {
+    return {
+      id: item.id,
+      title: item.title,
+    };
+  });

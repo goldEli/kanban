@@ -5,6 +5,8 @@ declare namespace API.Kanban {
       items: Model.Kanban.Info[];
     };
     type Keys = "todo" | "inProgress" | "done";
-    type Result = Record<Keys, Data>;
+    type Result = {
+      data: Model.Kanban.Issues[];
+    };
   }
 }
