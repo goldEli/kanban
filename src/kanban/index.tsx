@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { columnsFromBackend, issueColumns } from "./data";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import IssueCard from "./IssueCard";
-import { getId, handleId } from "./utils";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { getId } from "./utils";
 import { produce } from "immer";
 import IssuesGroup from "./IssuesGroup";
 
@@ -11,22 +10,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-`;
-const DropAreaList = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 8px;
-  /* min-height: 80vh; */
-`;
-const DropArea = styled.div`
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  background: #f3f3f3;
-  width: 341px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  padding: 15px 15px;
 `;
 
 const Title = styled.span`
