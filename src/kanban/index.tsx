@@ -50,7 +50,6 @@ const Kanban = () => {
       onDragEnd={(result) => {
         if (!result.destination) return;
         const { source, destination } = result;
-        console.log(source, destination);
         // 跨容器拖动
         if (source.droppableId !== destination.droppableId) {
           // 获取拖动源数据
@@ -91,41 +90,30 @@ const Kanban = () => {
               return item;
             });
           });
-
-          // const sourceData =
-          //   columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
-          // const destColumn =
-          //   columns[destination.droppableId as API.Kanban.GetKanbanList.Keys];
-          // const sourceItems = [...sourceData.items];
-          // const destItems = [...destColumn.items];
-          // const [removed] = sourceItems.splice(source.index, 1);
-          // destItems.splice(destination.index, 0, removed);
-          // setColumns({
-          //   ...columns,
-          //   [source.droppableId]: {
-          //     ...sourceData,
-          //     items: sourceItems,
-          //   },
-          //   [destination.droppableId]: {
-          //     ...destColumn,
-          //     items: destItems,
-          //   },
-          // });
+          return;
         }
         // else {
-        //   const column =
-        //     columns[source.droppableId as API.Kanban.GetKanbanList.Keys];
-        //   const copiedItems = [...column.items];
-        //   const [removed] = copiedItems.splice(source.index, 1);
-        //   copiedItems.splice(destination.index, 0, removed);
-        //   setColumns({
-        //     ...columns,
-        //     [source.droppableId]: {
-        //       ...column,
-        //       items: copiedItems,
-        //     },
-        //   });
-        // }
+        // 获取拖动源数据
+        const sourceData = columns.find(
+          (item) => handleId(item.id) === source.droppableId
+        );
+
+        // 获取源中可拖动卡片列表
+        const copiedItems = [...(sourceData?.list ?? [])];
+
+        const [removed] = copiedItems.splice(source.index, 1);
+        copiedItems.splice(destination.index, 0, removed);
+        setColumns((prev) => {
+          return prev.map((item) => {
+            if (handleId(item.id) === source.droppableId && sourceData) {
+              return {
+                ...sourceData,
+                list: copiedItems,
+              };
+            }
+            return item;
+          });
+        });
       }}
     >
       <Container>
