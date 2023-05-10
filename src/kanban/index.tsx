@@ -4,6 +4,7 @@ import { columnsFromBackend, issueColumns } from "./data";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import IssueCard from "./IssueCard";
 import { getId, handleId } from "./utils";
+import { produce } from "immer";
 
 const Container = styled.div`
   display: flex;
@@ -45,85 +46,109 @@ const ColumnTitleArea = styled.div`
 const Kanban = () => {
   const [data, setData] = useState(columnsFromBackend);
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-    console.log("data", data);
-    const { source, destination } = result;
-    // 跨容器拖动
-    if (source.droppableId !== destination.droppableId) {
-      // 获取拖动源数据
-      const sourceData = data
-        .find((item) => item.groupId === getId(source.droppableId).groupId)
-        ?.data.find((item) => item.id === getId(source.droppableId).id);
-      // 获取目标数据
-      const destinationData = data
-        .find((item) => item.groupId === getId(destination.droppableId).groupId)
-        ?.data.find((item) => item.id === getId(destination.droppableId).id);
-      // 获取源中可拖动卡片列表
-      const sourceItems = [...(sourceData?.list ?? [])];
-      // 获取目标中可拖动卡片列表
-      const destinationItems = [...(destinationData?.list ?? [])];
-      // 源移除的卡片数据
-      const [removed] = sourceItems.splice(source.index, 1);
-      removed.father_id = getId(destination.droppableId).groupId;
-      // 移除的卡片数据插入目标中
-      destinationItems.splice(destination.index, 0, removed);
-      console.log({
-        sourceItems,
-        destinationItems,
-      });
-
-      // 更新数据
-      const newDataBySource = data.map((issuesGroup) => {
-        if (issuesGroup.groupId === getId(source.droppableId).groupId) {
-          return {
-            ...issuesGroup,
-            data: issuesGroup.data.map((issues) => {
-              if (issues.id === getId(source.droppableId).id && sourceItems) {
-                return {
-                  ...issues,
-                  list: sourceItems,
-                };
-              }
-              return issues;
-            }),
-          };
-        }
-
-        return issuesGroup;
-      });
-      const newDataByDestination = newDataBySource.map((issuesGroup) => {
-        if (issuesGroup.groupId === getId(destination.droppableId).groupId) {
-          return {
-            ...issuesGroup,
-            data: issuesGroup.data.map((issues) => {
-              if (
-                issues.id === getId(destination.droppableId).id &&
-                destinationItems
-              ) {
-                return {
-                  ...issues,
-                  list: destinationItems,
-                };
-              }
-              return issues;
-            }),
-          };
-        }
-
-        return issuesGroup;
-      });
-      console.log(newDataByDestination);
-      setData(newDataByDestination);
-      return;
-    }
-  };
-
   // const onDragEnd = (result: DropResult) => {
   //   if (!result.destination) return;
   //   const { source, destination } = result;
-  //   console.log({ source, destination });
+  //   // 跨容器拖动
+  //   if (source.droppableId !== destination.droppableId) {
+  //     // 获取拖动源数据
+  //     const sourceData = data
+  //       .find((item) => item.groupId === getId(source.droppableId).groupId)
+  //       ?.data.find((item) => item.id === getId(source.droppableId).id);
+  //     // 获取目标数据
+  //     const destinationData = data
+  //       .find((item) => item.groupId === getId(destination.droppableId).groupId)
+  //       ?.data.find((item) => item.id === getId(destination.droppableId).id);
+  //     // 获取源中可拖动卡片列表
+  //     const sourceItems = [...(sourceData?.list ?? [])];
+  //     // 获取目标中可拖动卡片列表
+  //     const destinationItems = [...(destinationData?.list ?? [])];
+  //     // 源移除的卡片数据
+  //     const [removed] = sourceItems.splice(source.index, 1);
+  //     removed.father_id = getId(destination.droppableId).groupId;
+  //     // 移除的卡片数据插入目标中
+  //     destinationItems.splice(destination.index, 0, removed);
+  //     console.log({
+  //       sourceItems,
+  //       destinationItems,
+  //     });
+
+  //     // 更新数据
+  //     const newDataBySource = data.map((issuesGroup) => {
+  //       if (issuesGroup.groupId === getId(source.droppableId).groupId) {
+  //         return {
+  //           ...issuesGroup,
+  //           data: issuesGroup.data.map((issues) => {
+  //             if (issues.id === getId(source.droppableId).id && sourceItems) {
+  //               return {
+  //                 ...issues,
+  //                 list: sourceItems,
+  //               };
+  //             }
+  //             return issues;
+  //           }),
+  //         };
+  //       }
+
+  //       return issuesGroup;
+  //     });
+  //     const newDataByDestination = newDataBySource.map((issuesGroup) => {
+  //       if (issuesGroup.groupId === getId(destination.droppableId).groupId) {
+  //         return {
+  //           ...issuesGroup,
+  //           data: issuesGroup.data.map((issues) => {
+  //             if (
+  //               issues.id === getId(destination.droppableId).id &&
+  //               destinationItems
+  //             ) {
+  //               return {
+  //                 ...issues,
+  //                 list: destinationItems,
+  //               };
+  //             }
+  //             return issues;
+  //           }),
+  //         };
+  //       }
+
+  //       return issuesGroup;
+  //     });
+  //     setData(newDataByDestination);
+  //     return;
+  //   }
   // };
+
+  // refactor with immerjs
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+
+    // 跨容器拖动
+    if (source.droppableId !== destination.droppableId) {
+      setData(
+        produce((draft) => {
+          // 获取拖动源数据
+          const sourceData = draft
+            .find((item) => item.groupId === getId(source.droppableId).groupId)
+            ?.data.find((item) => item.id === getId(source.droppableId).id);
+          // 获取目标数据
+          const destinationData = draft
+            .find(
+              (item) => item.groupId === getId(destination.droppableId).groupId
+            )
+            ?.data.find(
+              (item) => item.id === getId(destination.droppableId).id
+            );
+          // 源移除的卡片数据
+          const [removed] = sourceData?.list?.splice(source.index, 1) ?? [];
+          // 移除的卡片数据插入目标中
+          if (removed) {
+            destinationData?.list?.splice(destination.index, 0, removed);
+          }
+        })
+      );
+    }
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
