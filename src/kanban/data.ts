@@ -20,39 +20,71 @@ export const data: Model.Kanban.Issue[] = [
   },
 ];
 
-export const columnsFromBackend: API.Kanban.GetKanbanList.Result = {
-  data: [
-    { id: 1, title: "To-do", count: 9, list: data },
-    { id: 2, title: "In Progress", count: 9, list: [] },
-    { id: 3, title: "Done", count: 9, list: [] },
-  ],
-};
+export const columnsFromBackend: Model.Kanban.IssuesGroup[] = [
+  {
+    groupId: 1,
+    title: "美术组",
+    data: [
+      {
+        id: 1,
+        title: "规划中",
+        count: 9,
+        list: [
+          {
+            id: 1111,
+            name: "吃饭",
+            father_id: 1,
+          },
+          {
+            id: 2222,
+            name: "睡觉",
+            father_id: 1,
+          },
+          {
+            id: 3333,
+            name: "看书",
+            father_id: 1,
+          },
+        ],
+      },
+      { id: 2, title: "实现中", count: 9, list: [] },
+      { id: 3, title: "已完成", count: 9, list: [] },
+    ],
+  },
+  {
+    groupId: 2,
+    title: "程序组",
+    data: [
+      { id: 1, title: "规划中", count: 9, list: [] },
+      {
+        id: 2,
+        title: "实现中",
+        count: 9,
+        list: [
+          {
+            id: 4444,
+            name: "去上幼儿园",
+            father_id: 2,
+          },
+          {
+            id: 5555,
+            name: "去商场买衣服",
+            father_id: 2,
+          },
+          {
+            id: 6666,
+            name: "回家洗衣服",
+            father_id: 2,
+          },
+        ],
+      },
+      { id: 3, title: "已完成", count: 9, list: [] },
+    ],
+  },
+];
 
-export const issueColumns: Model.Kanban.IssueColumn[] =
-  columnsFromBackend.data.map((item) => {
-    return {
-      id: item.id,
-      title: item.title,
-    };
-  });
-
-// [
-//   {
-//     groupId: 1,
-//     title: "美术组",
-//     data: [
-//       { id: 1, title: "沟通中", count: 9, list: data },
-//       { id: 2, title: "规划中", count: 9, list: [] },
-//       { id: 3, title: "实现中", count: 9, list: [] },
-//     ],
-//   },
-//   {
-//     groupId: 2,
-//     title: "程序组",
-//     data: [
-//       { id: 1, title: "沟通中", count: 9, list: data },
-//       { id: 2, title: "规划中", count: 9, list: [] },
-//       { id: 3, title: "实现中", count: 9, list: [] },
-//     ],
-//   },
-// ];
+export const issueColumns: Model.Kanban.IssueColumn[] = [
+  { id: 1, title: "规划中" },
+  { id: 2, title: "实现中" },
+  { id: 3, title: "已完成" },
+];

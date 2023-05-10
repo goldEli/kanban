@@ -29,6 +29,7 @@ const TaskInformation = styled.div`
 interface IssueCardProps {
   item: Model.Kanban.Issue;
   index: number;
+  groupId: Model.Kanban.IssuesGroup["groupId"];
 }
 
 const IssueCard = (props: IssueCardProps) => {
@@ -36,7 +37,7 @@ const IssueCard = (props: IssueCardProps) => {
   return (
     <Draggable
       key={item.id}
-      draggableId={handleId(item.id)}
+      draggableId={handleId(props.groupId, item.id)}
       index={index}
     >
       {(provided) => (

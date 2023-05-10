@@ -21,4 +21,9 @@ declare namespace Model.Kanban {
     id: number;
     title: string;
   }
+  interface IssuesGroup {
+    groupId: number,
+    title?: string,
+    data: Issues[],
+  }
 }
