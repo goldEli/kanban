@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { Droppable } from "react-beautiful-dnd";
 import IssueCard from "../IssueCard";
 import { handleId } from "../utils";
+import { columnsFromBackend, issueColumns } from "../data";
 
 interface IssuesProps {
   issues: Model.Kanban.Issues;
@@ -31,22 +32,28 @@ const DropStatusArea = styled.div`
 `;
 const Issues: React.FC<IssuesProps> = (props) => {
   const { issues, groupId } = props;
+  const column = issueColumns?.find((item) => item.id === issues.id);
   return (
     <Droppable key={issues.id} droppableId={handleId(groupId, issues.id)}>
-      {(provided, snapshot) => (
-        <DropArea ref={provided.innerRef} {...provided.droppableProps}>
-          <DropStatusArea>123</DropStatusArea>
-          {issues.list?.map((item, index) => (
-            <IssueCard
-              groupId={groupId}
-              key={item.id}
-              item={item}
-              index={index}
-            />
-          ))}
-          {provided.placeholder}
-        </DropArea>
-      )}
+      {(provided, snapshot) => {
+        console.log(snapshot, groupId);
+        return (
+          <DropArea ref={provided.innerRef} {...provided.droppableProps}>
+            {/* {column?.deps?.map?.((item) => {
+              return <DropStatusArea>{`123 -> ${item.title}`}</DropStatusArea>;
+            })} */}
+            {issues.list?.map((item, index) => (
+              <IssueCard
+                groupId={groupId}
+                key={item.id}
+                item={item}
+                index={index}
+              />
+            ))}
+            {provided.placeholder}
+          </DropArea>
+        );
+      }}
     </Droppable>
   );
 };

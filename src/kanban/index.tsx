@@ -26,6 +26,10 @@ const ColumnTitleArea = styled.div`
   display: flex;
   gap: 8px;
 `;
+type InfoItem = {
+  issuesId: Model.Kanban.Issues["id"];
+  visible: boolean;
+};
 
 const Kanban = () => {
   const [data, setData] = useState(columnsFromBackend);
@@ -78,7 +82,12 @@ const Kanban = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext
+      onDragEnd={onDragEnd}
+      onDragStart={(start) => {
+        console.log(start);
+      }}
+    >
       <Container>
         <ColumnTitleArea>
           {issueColumns.map((item) => {
